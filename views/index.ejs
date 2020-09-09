@@ -17,11 +17,15 @@
 	<div class="row thumbnail">
 		<% datas.forEach(function(data){ %>
 		<div class="col-md-3 col-sm-6 d-flex justify-content-around">
-			<figure class="figure">
-				<%= data.text %>
-			</figure>
-			<figcaption class="figure-caption text-center"><a href="/sort/<%= 								data._id %>" class="btn btn-success">Sort</a>										</figcaption>
-			
+			<div>
+				Name<i class="arrow right icon"></i><%= data.name %>
+				<hr>
+				Rollno<i class="arrow right icon"></i><%= data.rollno %>
+				<hr>
+				Department<i class="arrow right icon"></i><%= data.dept %>
+				<hr>
+				<figcaption class="figure-caption text-center"><a href="/myform/<%= 								data._id %>" class="btn btn-success">View</a>										</figcaption>
+			</div>			
 		</div>	
 		<% }) %>
 	</div>

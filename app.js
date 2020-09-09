@@ -5,6 +5,7 @@ var express			 = require('express'),
 {TesseractWorker} 	 = require('tesseract.js'), //npm install tesseract.js@2.0.0-alpha.15
 	worker			 = new TesseractWorker(),
 	bodyParser 	   	 = require("body-parser"),
+	methodOverride   = require("method-override"),
 	mongoose		 = require("mongoose");
 	
 
@@ -18,6 +19,7 @@ mongoose.connect("mongodb://localhost/new_ocr", {  //new_ocr
 app.use(bodyParser.urlencoded({extended : true})); //yaad kro to use body parser
 app.set("view engine","ejs");
 app.use(express.urlencoded({ extended: true }));
+app.use(methodOverride("_method"));
 
 //////Storage////////
 var Storage = multer.diskStorage({
@@ -48,8 +50,12 @@ var formSchema = new mongoose.Schema({
 var Form = mongoose.model("Form", formSchema);
 /////////////////////
 
+app.get('/landing', function(req, res){
+  res.render('landing');
+});
+
 app.get('/home', function(req, res){
-  Data.find({},function(err, alldata){
+  Form.find({},function(err, alldata){
 		if(err){
 			console.log(err);
 		}else{
@@ -58,30 +64,12 @@ app.get('/home', function(req, res){
 	})
 });
 
+//new form
 app.get('/ocr', function(req, res){
   res.render('form');
 });
 
-app.get("/sort/:id", function(req, res){
-	//find the data with provided id
-	Data.findById(req.params.id).exec(function(err,foundData){//.id can be .anything
-		if(err){
-			console.log(err);
-		}else{
-			console.log(foundData);
-			var p = foundData.text;
-			// sort(p);
-			p = p.toString();
-			p = p.replace(/[:]+/g, " ")
-			p = p.replace(/[ ]+/g, "_")
-			p = p.replace(/[A-Z]+/g, "$")
-			p = p.replace(/[_]+/g, " ")
-			sort(p);
-			res.render("sort", {p : p});
-		}
-	})
-});
-
+//post route to save new form
 app.post("/upload", function(req, res){
 	upload(req, res, err => {
 		fs.readFile(`./images/${req.file.originalname}`, function(err, data){
@@ -103,7 +91,7 @@ app.post("/upload", function(req, res){
 					var newData = {text : result.text};
 					Data.create(newData,function(err, newtext){
 						if(err){
-							console.log(err);
+						console.log(err);
 						}else{
 							res.render("show", {data: newtext})	
 								}	
@@ -115,29 +103,75 @@ app.post("/upload", function(req, res){
 	})
 })
 
-// app.get("/download", function(req, res){
-// 	var file = `${__dirname}/tesseract.js-ocr-result.pdf`;
-// 	res.download(file);
-// })
-// const p = "ACDdd";
-// // const regex = /[A-H]/g;
-// // console.log(p.replace(regex, ' '));
-// console.log(p.replace(/[A-Z]/g, " "));
-// function sort(p, req, res){
-// 	p = p.toString();
-	// console.log(p);
-	// p = p.replace(/[A-Z]/g, " ")
-	// return p;
-	// const p = "ACDdd";
-	// console.log(p.replace(/[A-Z]/g, " "));
-	// var dataObject = data.toObject();
-	// console.log(dataObject.text);
-	// console.log(p.replace(/[A-Z]/g, " "));
-	// for (var k in data) {
-	// console.log(data[k]) };
-		// eval('(' + data + ')').text;
+//Sorting goes here
+app.get("/sort/:id", function(req, res){
+	//find the data with provided id
+	Data.findById(req.params.id).exec(function(err,foundData){//.id can be .anything
+		if(err){
+			console.log(err);
+		}else{
+			console.log(foundData);
+			var p = foundData.text;
+			// sort(p);
+			p = p.toString();
+			p = p.replace(/[:]+/g, " ")
+			p = p.replace(/[ ]+/g, "_")
+			p = p.replace(/[A-Z]+/g, "$")
+			p = p.replace(/[_]+/g, " ")
+			sort(p);
+			res.redirect("/home");
+			// res.render("sort", {p : p});
+		}
+	})
+});
 
-// }
+//View Form
+app.get("/myform/:id", function(req, res){
+	Form.findById(req.params.id).exec(function(err,foundData){
+		if(err){
+			console.log(err);
+		}else{
+			res.render("myform", {form : foundData});
+		}
+	})
+})
+
+//EDIT FORM ROUTE
+app.get("/myform/:id/edit", function(req, res){
+		//findById tells info of clicked campground and help in edits
+		Form.findById(req.params.id, function(err, founddata){
+			res.render("edit", {data : founddata});
+		})
+});
+
+//UPDATE FORM ROUTE
+app.put("/myform/:id", function(req, res){
+	// rather than doing var data = { name = req.body.name, 
+	//nest all together in array in edit.ejs using name=data[name]
+	// here down then u have to use data instead req.body.name
+	//find and update correct campground
+	Form.findByIdAndUpdate(req.params.id, req.body.data, function(err, UpdatedForm){
+		if(err){
+			res.redirect("/home");
+		} else{
+			res.redirect("/myform/" + req.params.id )
+			//instead of re.params.id UpdatedForm.id can be used
+		}
+	})
+	//redirect somewhere
+})
+
+//DESTROY Form
+app.delete("/myform/:id", function(req, res){
+	Form.findByIdAndRemove(req.params.id, function(err){
+		if(err){
+			res.redirect("/home")
+		} else{
+			res.redirect("/home")
+		}
+	})
+})
+
 
 function sort(p){
 	var s = p;
@@ -174,7 +208,23 @@ function sort(p){
 	b = s.substring(a3,a4);
 	c = s.substring(a5,a6);
 	console.log(a,b,c);
+	
+	var newForm = {name : a, rollno : b, dept : c};
+	//create a new Form and save it in DB
+	Form.create(newForm,function(err, newform){
+		if(err){
+			console.log(err);
+		}else{
+			console.log(newform);
+}	
+	})
+
 }
+
+// app.get("/download", function(req, res){
+// 	var file = `${__dirname}/tesseract.js-ocr-result.pdf`;
+// 	res.download(file);
+// })
 
 app.listen(3000, function(){
 	console.log("Server ON");
