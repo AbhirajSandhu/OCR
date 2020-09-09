@@ -1,17 +1,33 @@
 <%- include ("partials/header") %>
 
-<div class="container">
-		<h1 class="text-center" style="padding: 10px;">Text Recognization</h1>
-	<div style="width:30%; margin: 70px auto;">
-    <form id="frmUploader" enctype="multipart/form-data" action="/upload" method="post" >
-	<div class="form-group">
-		<input class="form-control btn btn-info" type="file" name="avatar">
+<div class="container"> <!--to create spacing on sides-->
+
+	<header class="jumbotron">
+		<div class="container"> <!--when we shrink we have spaces on sides-->
+
+			<h1>Kings V punjaB</h1>
+			<p>Your forms our problem!</p>
+			<p>
+				<a class="btn btn-info btn-lg" href="/ocr">Let's Go</a>
+			</p>
+
+		</div>
+	</header>
+
+	<div class="row thumbnail">
+		<% datas.forEach(function(data){ %>
+		<div class="col-md-3 col-sm-6 d-flex justify-content-around">
+			<figure class="figure">
+				<%= data.text %>
+			</figure>
+			<figcaption class="figure-caption text-center"><a href="/sort/<%= 								data._id %>" class="btn btn-success">Sort</a>										</figcaption>
+			
+		</div>	
+		<% }) %>
 	</div>
-	<div class="form-group">
-		<input class="form-control btn btn-primary" type="submit" name="submit" id="btnSubmit" value="Upload">
-	</div>
-    </form>
-	</div>
+
 </div>
+
+
 
 <%- include ("partials/footer") %>
