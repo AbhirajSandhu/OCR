@@ -1,0 +1,39 @@
+
+<%- include ("partials/header") %>
+
+<div class="container"> <!--to create spacing on sides-->
+
+	<header class="jumbotron">
+		<div class="container"> <!--when we shrink we have spaces on sides-->
+
+			<h1>Kings V punjaB</h1>
+			<p>Your forms our problem!</p>
+			<p>
+				<a class="btn btn-info btn-lg" href="/ocr">Let's Go</a>
+			</p>
+
+		</div>
+	</header>
+
+	<div class="row thumbnail">
+		<% datas.forEach(function(data){ %>
+		<div class="col-md-3 col-sm-6 d-flex justify-content-around">
+			<div>
+				Name<i class="arrow right icon"></i><%= data.name %>
+				<hr>
+				Rollno<i class="arrow right icon"></i><%= data.rollno %>
+				<hr>
+				Department<i class="arrow right icon"></i><%= data.dept %>
+				<hr>
+				<figcaption class="figure-caption text-center"><a href="/myform/<%= 								data._id %>" class="btn btn-success">View</a>	
+				</figcaption>
+			</div>			
+		</div>	
+		<% }) %>
+	</div>
+
+</div>
+
+
+
+<%- include ("partials/footer") %>

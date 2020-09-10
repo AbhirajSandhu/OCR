@@ -55,11 +55,15 @@ app.get('/landing', function(req, res){
 });
 
 app.get('/home', function(req, res){
+  res.render('index');
+});
+
+app.get('/view', function(req, res){
   Form.find({},function(err, alldata){
 		if(err){
 			console.log(err);
 		}else{
-			res.render("index", { datas : alldata });
+			res.render("home", { datas : alldata });
 		}
 	})
 });

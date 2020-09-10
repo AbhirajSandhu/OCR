@@ -1,37 +1,230 @@
-<%- include ("partials/header") %>
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>OCR</title>
+		<style>
+		*
+{
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	font-family: 'Poppins', sans-serif;
+}
+body
+{
+	background: white;
+	min-height: 200vh;
+}
+header
+{
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	transition: 0.6s;
+	padding: 40px 100px;
+	z-index: 100000;
+}
+header.sticky
+{
+	 padding: 5px 100px;
+	 background: #fff;
+}
+header .logo
+{
+	position: relative;
+	font-weight: 700;
+	color: #fff;
+	text-decoration: none;
+	font-size: 2em;
+	text-transform: uppercase;
+	letter-spacing: 2px;
+	transition: 0.6s;
+}
+header ul
+{
+	position: relative;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	list-style-type: none;
+}
+header ul li a
+{
+	position: relative;
+	margin: 0 15px;
+	text-decoration: none;
+	color: #fff;
+	letter-spacing: 2px;
+	font-weight: 500px;
+	transition: 0.6s;
+}
+header.sticky .logo,
+header.sticky ul li a
+{
+	color: #000;
+}
+.banner
+{
+	position: relative;
+	width: 100%;
+	height: 100vh;
+	background: url(https://i.ibb.co/QXZQ4Cr/img.jpg);
+	background-size: cover;
+	background-position: bottom;
+}
+.banner .clouds
+{
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+}
+.banner .clouds img
+{
+	position: absolute;
+	bottom: 0;
+	max-width: 100%;
+	animation: animate calc(8s * var(--i)) linear infinite;
+}
+@keyframes animate
+{
+	0%
+	{
+		transform: translateX(-100%);
+	}
+	100%
+	{
+		transform: translateX(100%);
+	}
+}
+section
+{
+	position: relative;
+	padding: 75px 100px;
+}
+			
+			.centered
+{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index:1000;
+    transform: translate(-50%, -50%);
+}
+.button
+{
+	position: relative;
+	display: inline-block;
+	padding: 12px 36px;
+	margin: 10px 0;
+	color: #fff;
+	text-decoration: none;
+	text-transform: uppercase;
+	font-size: 18px;
+	letter-spacing: 2px;
+	border-radius: 40px;
+	overflow: hidden;
+	background: linear-gradient(90deg,#001133,#ffffb3);
+}
+.button:nth-child(2)
+{
+	background: linear-gradient(90deg,#001133,#ffffb3);
+}
+span
+{
+	position: absolute;
+	background: #fff;
+	z-index:10000;
+	transform: translate(-50%,-50%);
+	pointer-events: none;
+	border-radius: 50%;
+	animation: animate2 1s linear infinite;
+}
+@keyframes animate2
+{
+	0%
+	{
+		width: 0px;
+		height: 0px;
+	}
+	100%%
+	{
+		width: 50px;
+		height: 50px;
+	}
+}
 
-<div class="container"> <!--to create spacing on sides-->
+		</style>
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    </head>
+    <body>
 
-	<header class="jumbotron">
-		<div class="container"> <!--when we shrink we have spaces on sides-->
+    <header>
+      <a class="logo">KingsVpunjaB</a>
+        <ul>
+          <li><a href="/home">Home</a></li>
+          <li><a href="/ocr">OCR</a></li>
+          <li><a href="/login">Login</a></li>
+          <li><a href="/register">Register</a></li>
+        </ul>
+    </header>
 
-			<h1>Kings V punjaB</h1>
-			<p>Your forms our problem!</p>
-			<p>
-				<a class="btn btn-info btn-lg" href="/ocr">Let's Go</a>
-			</p>
+  <div  class="banner">
+	  
+	  <!-- buttons -->
+	  <div class="container">
+        <div class="centered">
+            <a href="/ocr" class="button">Create</a>
+            <a href="/view" class="button">View</a>
+            <script type="text/javascript">
+              const buttons = document.querySelectorAll('.button');
+              buttons.forEach(btn => {
+                btn.addEventListener('click',function(e){
 
-		</div>
-	</header>
+                  let x = e.clientX - e.target.offsetLeft;
+                  let y = e.clientY - e.target.offsetTop;
 
-	<div class="row thumbnail">
-		<% datas.forEach(function(data){ %>
-		<div class="col-md-3 col-sm-6 d-flex justify-content-around">
-			<div>
-				Name<i class="arrow right icon"></i><%= data.name %>
-				<hr>
-				Rollno<i class="arrow right icon"></i><%= data.rollno %>
-				<hr>
-				Department<i class="arrow right icon"></i><%= data.dept %>
-				<hr>
-				<figcaption class="figure-caption text-center"><a href="/myform/<%= 								data._id %>" class="btn btn-success">View</a>										</figcaption>
-			</div>			
-		</div>	
-		<% }) %>
-	</div>
+                  let ripples = document.createElement('span');
+                  ripples.style.left = x + 'px';
+                  ripples.style.top = y + 'px';
+                  this.appendChild(ripples);
 
-</div>
+                  setTimeOut(() => {
+                    ripples.remove()
+                  },1000);
+                })
+              })
+            </script>
+        </div>
+      </div> 
+	  
+   <div class="clouds">
+    <img src="https://i.ibb.co/P9ZzqDD/cloud1.png" style="--i:1;">
+    <img src="https://i.ibb.co/TqXP4c3/cloud2.png" style="--i:2;">
+    <img src="https://i.ibb.co/HghGMH1/cloud3.png" style="--i:3;">
+    <img src="https://i.ibb.co/d5k6qKs/cloud4.png" style="--i:4;">
+    <img src="https://i.ibb.co/zGFjymp/cloud5.png" style="--i:5;">
+  </div>
+  </div>
+    <section>
+		<h2>Lorem Ipsum</h2>
+      <p>
+Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
 
-
-
-<%- include ("partials/footer") %>
+It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).
+  </p>
+    </section>
+    <script type="text/javascript">
+      window.addEventListener("scroll", function(){
+        var header = document.querySelector("header");
+        header.classList.toggle("sticky", window.scrollY > 0)
+      })
+    </script>
+</body>
+</html>
