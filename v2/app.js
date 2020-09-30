@@ -156,7 +156,7 @@ app.put("/myform/:id", function(req, res){
 	// rather than doing var data = { name = req.body.name, 
 	//nest all together in array in edit.ejs using name=data[name]
 	// here down then u have to use data instead req.body.name
-	//find and update correct campground
+	//find and update correct data
 	Form.findByIdAndUpdate(req.params.id, req.body.data, function(err, UpdatedForm){
 		if(err){
 			res.redirect("/home");
